@@ -98,3 +98,39 @@ function use_card(galaxy: &mut Galaxy, card_index: usize) {
         println!("卡片已被使用");
     }
 }
+
+// 创建天体
+function create_celestial_body(name: String, kind: String, energy: u32, mass: f64, radius: f64) -> CelestialBody {
+    let id = rand::random
+// 创建星系
+function create_galaxy() -> Galaxy {
+    Galaxy {
+        nfts: Vec::new(),
+        cards: Vec::new(),
+        currency: 0,
+    }
+}
+
+// 向星系中添加天体
+function add_celestial_body(galaxy: &mut Galaxy, body: CelestialBody) {
+    galaxy.nfts.push(body);
+}
+
+// 从星系中移除天体
+function remove_celestial_body(galaxy: &mut Galaxy, body_index: usize) {
+    galaxy.nfts.remove(body_index);
+}
+
+// 显示星系中的天体列表
+function list_celestial_bodies(galaxy: &Galaxy) {
+    for body in &galaxy.nfts {
+        println!("ID: {}, 名称: {}, 类型: {}, 能量: {}", body.id, body.name, body.kind, body.energy);
+    }
+}
+
+// 显示玩家拥有的卡片列表
+function list_cards(galaxy: &Galaxy) {
+    for card in &galaxy.cards {
+        println!("ID: {}, 类型: {}, 稀有度: {:?}", card.id, card.card_type, card.rarity);
+    }
+}
