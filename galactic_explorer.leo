@@ -134,3 +134,89 @@ function list_cards(galaxy: &Galaxy) {
         println!("ID: {}, 类型: {}, 稀有度: {:?}", card.id, card.card_type, card.rarity);
     }
 }
+
+// 使用黑洞卡
+function use_black_hole_card(galaxy: &mut Galaxy, card_index: usize, target_index: usize) -> bool {
+    let card = &galaxy.cards[card_index];
+
+    if card.card_type != CardType::BlackHole {
+        return false;
+    }
+
+    let black_hole_energy = card.rarity as u32 * 100;
+    let target_body = &galaxy.nfts[target_index];
+
+    if target_body.energy <= black_hole_energy * 2 {
+        remove_celestial_body(galaxy, target_index);
+        return true;
+    }
+
+    false
+}
+
+// 使用逃逸卡
+function use_escape_card(galaxy: &mut Galaxy, card_index: usize, target_index: usize) -> bool {
+    let card = &galaxy.cards[card_index];
+
+    if card.card_type != CardType::Escape {
+        return false;
+    }
+
+    let escape_success_rate = card.rarity as u32 * 10;
+    let random_number = generate_random_number(1, 100);
+
+    if random_number <= escape_success_rate {
+        remove_celestial_body(galaxy, target_index);
+        return true;
+    }
+
+    false
+}
+
+// 使用探测卡
+function use_detection_card(galaxy: &Galaxy, card_index: usize) -> Vec<usize> {
+    let card = &galaxy.cards[card_index];
+
+    if card.card_type != CardType::Detection {
+        return Vec::new();
+    }
+
+    let mut black_holes: Vec<usize> = Vec::new();
+
+    for (index, body) in galaxy.nfts.iter().enumerate() {
+        if body.kind == CelestialBodyKind::BlackHole {
+            black_holes.push(index);
+        }
+    }
+
+    black_holes
+}
+
+// 使用隐匿卡
+function use_stealth_card(galaxy: &mut Galaxy, card_index: usize, target_index: usize) -> bool {
+    let card = &galaxy.cards[card_index];
+
+    if card.card_type != CardType::Stealth {
+        return false;
+    }
+
+    let stealth_duration = card.rarity as u32 * 10;
+    let target_body = &mut galaxy.nfts[target_index];
+    target_body.stealth_duration = stealth_duration;
+
+    true
+}
+
+// 检查一个天体是否处于隐形状态
+function is_stealthed(celestial_body: &CelestialBody) -> bool {
+    celestial_body.stealth_duration > 0
+}
+
+// 逐渐减少所有天体的隐形时间
+function decrease_stealth_durations(galaxy: &mut Galaxy) {
+    for celestial_body in galaxy.nfts.iter_mut() {
+        if celestial_body.stealth_duration > 0 {
+            celestial_body.stealth_duration -= 1;
+        }
+    }
+}
